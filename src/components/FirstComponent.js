@@ -1,60 +1,84 @@
 import React from 'react';
-import ComicAvatar from './ComicAvatar/ComicAvatar';
 import { makeStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
+import Grid from '@material-ui/core/Grid';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import { Link } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
+import IconLink from '@material-ui/icons/Link';
+import IconButton from '@material-ui/core/IconButton';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden'
+    // display: 'flex',
+    // flexWrap: 'wrap',
+    // justifyContent: 'space-around',
+    // overflow: 'hidden',
     // backgroundColor: theme.palette.background.paper
+    marginTop: '64px'
+    //0px 20px 60px
   },
   gridList: {
     minWidth: 500,
     minHeight: 500
+  },
+  card: {
+    maxWidth: 345,
+    margin: 5
+  },
+  cardActions: {
+    justifyContent: 'flex-end'
   }
 }));
 
 function FirstComponent(props) {
   const classes = useStyles();
 
-  //https://stackoverflow.com/questions/48921432/how-to-make-the-gridlist-component-in-react-material-ui-responsive
-  const getGridListCols = () => {
-    if (isWidthUp('xl', props.width)) {
-      return 5;
-    }
-
-    if (isWidthUp('lg', props.width)) {
-      return 4;
-    }
-
-    if (isWidthUp('md', props.width)) {
-      return 3;
-    }
-
-    return 2;
-  };
-
   return (
     <div className={classes.root}>
-      <GridList
-        cellHeight={160}
-        className={classes.gridList}
-        cols={getGridListCols()}
+      <Grid
+        container
+        spacing={10}
+        direction="row"
+        justify="center"
+        alignItems="center"
+        alignContent="space-around"
       >
         {props.data.map(item => (
-          <GridListTile key={item.id} cols={item.cols || 1}>
-            <ComicAvatar item={item} />
-            <GridListTileBar title={item.name} />
-          </GridListTile>
+          <Card className={classes.card} key={item.id}>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                alt={item.name}
+                height="140"
+                image={item.thumbnail.path + '.' + item.thumbnail.extension}
+                title={item.name}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {item.name}
+                </Typography>
+                {/* <Typography variant="body2" color="textSecondary" component="p">
+                  {item.description}
+                </Typography> */}
+              </CardContent>
+            </CardActionArea>
+            <CardActions className={classes.cardActions}>
+              <IconButton
+                aria-label="Upload picture"
+                component="a"
+                target="_blank"
+                href={item.urls[0].url}
+              >
+                <IconLink />
+              </IconButton>
+            </CardActions>
+          </Card>
         ))}
-      </GridList>
+      </Grid>
     </div>
   );
 }
