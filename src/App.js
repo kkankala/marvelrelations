@@ -4,6 +4,16 @@ import { fetchGetApi } from './api/apiUtils';
 import './App.css';
 import AppToolbar from './components/common/AppToolbar';
 import FirstComponent from './components/FirstComponent';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+  withRouter
+} from 'react-router-dom';
+
+//TODO: Implement this routing thingy.... https://reacttraining.com/react-router/web/example/auth-workflow
+
 function App() {
   const [data, setData] = useState([]);
 
@@ -31,10 +41,12 @@ function App() {
     }
   }
   return (
-    <div className="App">
-      <AppToolbar searchCharacter={searchChar} />
-      <FirstComponent data={data} />
-    </div>
+    <Router>
+      <div className="App">
+        <AppToolbar searchCharacter={searchChar} />
+        <FirstComponent data={data} />
+      </div>
+    </Router>
   );
 }
 
