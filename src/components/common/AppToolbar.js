@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function AppToolbar() {
+export default function AppToolbar(props) {
   const classes = useStyles();
 
   return (
@@ -90,6 +90,9 @@ export default function AppToolbar() {
                 input: classes.inputInput
               }}
               inputProps={{ 'aria-label': 'Search' }}
+              onChange={evet => {
+                props.searchCharacter(evet);
+              }}
             />
           </div>
         </Toolbar>
