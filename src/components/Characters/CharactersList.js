@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
@@ -10,16 +10,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import IconLink from '@material-ui/icons/Link';
 import IconButton from '@material-ui/core/IconButton';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   root: {
-    // display: 'flex',
-    // flexWrap: 'wrap',
-    // justifyContent: 'space-around',
-    // overflow: 'hidden',
-    // backgroundColor: theme.palette.background.paper
     marginTop: '64px'
-    //0px 20px 60px
   },
   gridList: {
     minWidth: 500,
@@ -34,10 +29,13 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function FirstComponent(props) {
+function CharactersList(props) {
+  const [redirect, setRedirect] = useState({ isRedirect: false, charId: 0 });
   const classes = useStyles();
 
-  return (
+  return redirect.isRedirect ? (
+    <Redirect push to={'/character/' + redirect.charId} />
+  ) : (
     <div className={classes.root}>
       <Grid
         container
@@ -47,9 +45,11 @@ function FirstComponent(props) {
         alignItems="center"
         alignContent="space-around"
       >
-        {props.data.map(item => (
+        {props.characters.map(item => (
           <Card className={classes.card} key={item.id}>
-            <CardActionArea>
+            <CardActionArea
+              onClick={() => setRedirect({ isRedirect: true, charId: item.id })}
+            >
               <CardMedia
                 component="img"
                 alt={item.name}
@@ -83,4 +83,4 @@ function FirstComponent(props) {
   );
 }
 
-export default withWidth()(FirstComponent);
+export default withWidth()(CharactersList);

@@ -3,7 +3,7 @@ import { fetchGetApi } from './api/apiUtils';
 // import logo from './logo.svg';
 import './App.css';
 import AppToolbar from './components/common/AppToolbar';
-import FirstComponent from './components/FirstComponent';
+import CharactersList from './components/Characters/CharactersList';
 import {
   BrowserRouter as Router,
   Route,
@@ -11,6 +11,7 @@ import {
   Redirect,
   withRouter
 } from 'react-router-dom';
+import { CharacterDetails } from './components/Characters/CharacterDetails';
 
 //TODO: Implement this routing thingy.... https://reacttraining.com/react-router/web/example/auth-workflow
 
@@ -44,7 +45,14 @@ function App() {
     <Router>
       <div className="App">
         <AppToolbar searchCharacter={searchChar} />
-        <FirstComponent data={data} />
+        <Route
+          exact
+          path="/"
+          render={routerProps => (
+            <CharactersList {...routerProps} characters={data} />
+          )}
+        />
+        <Route path="/Character/:charId" component={CharacterDetails} />
       </div>
     </Router>
   );
