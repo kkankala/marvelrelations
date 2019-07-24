@@ -4,13 +4,7 @@ import { fetchGetApi } from './api/apiUtils';
 import './App.css';
 import AppToolbar from './components/common/AppToolbar';
 import CharactersList from './components/Characters/CharactersList';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { CharacterDetails } from './components/Characters/CharacterDetails';
 
 //TODO: Implement this routing thingy.... https://reacttraining.com/react-router/web/example/auth-workflow
@@ -32,7 +26,6 @@ function App() {
         'characters?nameStartsWith=' + value + '&limit=100'
       );
       //nameStartsWith=loki&
-      console.log(result.data.results);
       setData(result.data.results);
     })();
   }
