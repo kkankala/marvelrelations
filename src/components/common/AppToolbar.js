@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -64,6 +64,11 @@ const useStyles = makeStyles(theme => ({
 
 export default function AppToolbar(props) {
   const classes = useStyles();
+  const [searchText, setsearchText] = useState('');
+
+  function handleChangeText(event) {
+    setsearchText(event.target.value);
+  }
 
   return (
     <div className={classes.root}>
@@ -81,20 +86,27 @@ export default function AppToolbar(props) {
             <Link to="/">Marvel</Link>
           </Typography>
           <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
+            <form
+              onSubmit={event => {
+                event.preventDefault();
+                props.handleSearchSubmit(searchText);
               }}
-              inputProps={{ 'aria-label': 'Search' }}
-              onChange={evet => {
-                props.searchCharacter(evet);
-              }}
-            />
+            >
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput
+                }}
+                inputProps={{ 'aria-label': 'Search' }}
+                onChange={evet => {
+                  handleChangeText(evet);
+                }}
+              />
+            </form>
           </div>
         </Toolbar>
       </AppBar>

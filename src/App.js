@@ -29,15 +29,15 @@ function App() {
       setData(result.data.results);
     })();
   }
-  function searchChar(event) {
-    if (event.target.value.length >= 4) {
-      searchApiByName(event.target.value);
-    }
+
+  function handleSubmit(searchValue) {
+    searchApiByName(searchValue);
   }
+
   return (
     <Router>
       <div className="App">
-        <AppToolbar searchCharacter={searchChar} />
+        <AppToolbar handleSearchSubmit={handleSubmit} />
         <Route
           exact
           path="/"

@@ -49,7 +49,7 @@ export default function CharacterItem({ charItem, redirectHandler, ...props }) {
         </CardActionArea>
         <CardActions className={classes.cardActions}>
           <IconButton
-            aria-label="Upload picture"
+            aria-label="character details"
             component="a"
             target="_blank"
             href={charItem.urls[0].url}
