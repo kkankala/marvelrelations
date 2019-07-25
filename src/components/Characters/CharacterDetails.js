@@ -8,16 +8,17 @@ const useStyles = makeStyles(theme => ({
   root: {
     //marginTop: '64px'
   },
-  gridList: {
-    minWidth: 500,
-    minHeight: 500
-  },
+  // gridList: {
+  //   minWidth: 500,
+  //   minHeight: 500
+  // },
   // card: {
   //   maxWidth: 345,
   //   margin: 5
   // },
-  cardActions: {
-    justifyContent: 'flex-end'
+  paper: {
+    minHeight: 300,
+    margin: '10px 10px 0px -30px;'
   },
   chip: {
     margin: theme.spacing(0.5)
@@ -30,15 +31,18 @@ export function CharacterDetails({ match, ...props }) {
   const [characterItemData, setCharacterItemData] = useState({
     events: { items: [] }
   });
-  useEffect(() => {
-    const fetchCharItemData = async () => {
-      const result = await fetchGetApi('/characters/' + match.params.charId);
-      //console.log(result.data.results[0].events.items[0].name);
-      setCharacterItemData(result.data.results[0]);
-      setEvents(result.data.results[0].events.items);
-    };
-    fetchCharItemData();
-  }, [match.params.charId]);
+  useEffect(
+    () => {
+      const fetchCharItemData = async () => {
+        const result = await fetchGetApi('/characters/' + match.params.charId);
+        //console.log(result.data.results[0].events.items[0].name);
+        setCharacterItemData(result.data.results[0]);
+        setEvents(result.data.results[0].events.items);
+      };
+      fetchCharItemData();
+    },
+    [match.params.charId]
+  );
 
   return (
     <div className={classes.root}>
@@ -58,7 +62,7 @@ export function CharacterDetails({ match, ...props }) {
           )}
         </Grid>
         <Grid item xs={6}>
-          <Paper>
+          <Paper className={classes.paper}>
             <Typography variant="h5" gutterBottom>
               Events related to {characterItemData.name}
             </Typography>
