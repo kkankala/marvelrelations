@@ -67,7 +67,17 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
 
-
 ### Projects to Try
 
 https://uber.github.io/react-vis/documentation/welcome-to-react-vis
+
+### Known Issues
+
+- Multiple all characters call
+- Search functionality doesnt work in char detail page
+- css of events paper
+
+### Features to Implement
+
+- Get all events for the characters based on available count
+- Show all the related characters

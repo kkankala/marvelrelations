@@ -83,7 +83,8 @@ export default function AppToolbar(props) {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            <Link to="/">Marvel</Link>
+            {/* <Link to="/">Marvel</Link> */}
+            Marvel
           </Typography>
           <div className={classes.search}>
             <form

@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Paper, Typography, Divider, Chip } from '@material-ui/core';
 import CharacterItemInfo from './CharacterItemInfo';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   root: {
     //marginTop: '64px'
   },
@@ -18,6 +18,9 @@ const useStyles = makeStyles(() => ({
   // },
   cardActions: {
     justifyContent: 'flex-end'
+  },
+  chip: {
+    margin: theme.spacing(0.5)
   }
 }));
 
@@ -30,12 +33,12 @@ export function CharacterDetails({ match, ...props }) {
   useEffect(() => {
     const fetchCharItemData = async () => {
       const result = await fetchGetApi('/characters/' + match.params.charId);
-      console.log(result.data.results[0].events.items[0].name);
+      //console.log(result.data.results[0].events.items[0].name);
       setCharacterItemData(result.data.results[0]);
-      setEvents(characterItemData.events.items);
+      setEvents(result.data.results[0].events.items);
     };
     fetchCharItemData();
-  }, [characterItemData.events.items, match.params.charId]);
+  }, [match.params.charId]);
 
   return (
     <div className={classes.root}>
@@ -43,7 +46,7 @@ export function CharacterDetails({ match, ...props }) {
         container
         direction="row"
         justify="center"
-        alignItems="center"
+        alignItems="flex-start"
         alignContent="space-around"
       >
         <Grid item xs={6}>
@@ -60,7 +63,7 @@ export function CharacterDetails({ match, ...props }) {
               Events related to {characterItemData.name}
             </Typography>
             <Divider />
-            {characterItemData.events.items.map(item => (
+            {events.map(item => (
               <Chip
                 key={item.name}
                 label={item.name}
