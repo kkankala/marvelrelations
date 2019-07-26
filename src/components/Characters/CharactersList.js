@@ -88,7 +88,7 @@ function CharactersList(props) {
           </Grid>
         </form>
       </div>
-      <Divider className={classes.divider} />
+      {/* <Divider className={classes.divider} /> */}
       <Grid
         container
         className={classes.root}

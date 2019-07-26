@@ -67,8 +67,7 @@ https://uber.github.io/react-vis/documentation/welcome-to-react-vis
 
 ### Known Issues
 
-- Multiple all characters call
-- Search functionality doesnt work in char detail page
+- N/A
 
 ### Features to Implement
 

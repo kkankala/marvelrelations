@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   // },
   paper: {
     minHeight: 300,
-    margin: '10px 10px 0px -30px;'
+    margin: '5px'
   },
   chip: {
     margin: theme.spacing(0.5)
@@ -31,18 +31,15 @@ export function CharacterDetails({ match, ...props }) {
   const [characterItemData, setCharacterItemData] = useState({
     events: { items: [] }
   });
-  useEffect(
-    () => {
-      const fetchCharItemData = async () => {
-        const result = await fetchGetApi('/characters/' + match.params.charId);
-        //console.log(result.data.results[0].events.items[0].name);
-        setCharacterItemData(result.data.results[0]);
-        setEvents(result.data.results[0].events.items);
-      };
-      fetchCharItemData();
-    },
-    [match.params.charId]
-  );
+  useEffect(() => {
+    const fetchCharItemData = async () => {
+      const result = await fetchGetApi('/characters/' + match.params.charId);
+      //console.log(result.data.results[0].events.items[0].name);
+      setCharacterItemData(result.data.results[0]);
+      setEvents(result.data.results[0].events.items);
+    };
+    fetchCharItemData();
+  }, [match.params.charId]);
 
   return (
     <div className={classes.root}>
