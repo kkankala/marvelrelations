@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { fetchGetApi } from './api/apiUtils';
+import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import AppToolbar from './components/common/AppToolbar';
@@ -9,42 +8,12 @@ import { CharacterDetails } from './components/Characters/CharacterDetails';
 
 //TODO: Implement this routing thingy.... https://reacttraining.com/react-router/web/example/auth-workflow
 
-function App() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await fetchGetApi('characters?limit=100');
-      setData(result.data.results);
-    };
-    fetchData();
-  }, []);
-
-  function searchApiByName(value) {
-    (async () => {
-      const result = await fetchGetApi(
-        'characters?nameStartsWith=' + value + '&limit=100'
-      );
-      //nameStartsWith=loki&
-      setData(result.data.results);
-    })();
-  }
-
-  function handleSubmit(searchValue) {
-    searchApiByName(searchValue);
-  }
-
+function App(props) {
   return (
     <Router>
       <div className="App">
-        <AppToolbar handleSearchSubmit={handleSubmit} />
-        <Route
-          exact
-          path="/"
-          render={routerProps => (
-            <CharactersList {...routerProps} characters={data} />
-          )}
-        />
+        <AppToolbar />
+        <Route exact path="/" component={CharactersList} />
         <Route path="/Character/:charId" component={CharacterDetails} />
       </div>
     </Router>
