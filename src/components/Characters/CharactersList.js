@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchGetApi } from '../../api/apiUtils';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, TextField, Divider } from '@material-ui/core/';
+import { Grid, TextField } from '@material-ui/core/';
 import { Redirect } from 'react-router-dom';
 import CharacterItem from './CharacterItem';
 import SearchIcon from '@material-ui/icons/Search';
@@ -88,7 +88,6 @@ function CharactersList(props) {
           </Grid>
         </form>
       </div>
-      {/* <Divider className={classes.divider} /> */}
       <Grid
         container
         className={classes.root}

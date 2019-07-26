@@ -67,9 +67,9 @@ https://uber.github.io/react-vis/documentation/welcome-to-react-vis
 
 ### Known Issues
 
-- N/A
+- Fix When no characters return on search - show notification
 
 ### Features to Implement
 
-- Get all events for the characters based on available count
+- Get more events logic on button click
 - Show all the related characters

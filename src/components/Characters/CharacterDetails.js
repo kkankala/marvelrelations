@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { fetchGetApi } from '../../api/apiUtils';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Typography, Divider, Chip } from '@material-ui/core';
+import {
+  Grid,
+  Paper,
+  Typography,
+  Divider,
+  Chip,
+  Button
+} from '@material-ui/core';
 import CharacterItemInfo from './CharacterItemInfo';
 
 const useStyles = makeStyles(theme => ({
@@ -17,11 +24,17 @@ const useStyles = makeStyles(theme => ({
   //   margin: 5
   // },
   paper: {
-    minHeight: 300,
-    margin: '5px'
+    minHeight: 500, //this should change for screen sizes
+    margin: '5px',
+    flexDirection: 'column',
+    display: 'flex',
+    justifyContent: 'flex-start'
   },
   chip: {
     margin: theme.spacing(0.5)
+  },
+  loadMore: {
+    marginTop: 'auto'
   }
 }));
 
@@ -36,6 +49,9 @@ export function CharacterDetails({ match, ...props }) {
       const result = await fetchGetApi('/characters/' + match.params.charId);
       //console.log(result.data.results[0].events.items[0].name);
       setCharacterItemData(result.data.results[0]);
+      let availableEventsCount = result.data.results[0].events.available;
+      if (availableEventsCount > result.data.results[0].events.items.length) {
+      }
       setEvents(result.data.results[0].events.items);
     };
     fetchCharItemData();
@@ -61,16 +77,21 @@ export function CharacterDetails({ match, ...props }) {
         <Grid item xs={6}>
           <Paper className={classes.paper}>
             <Typography variant="h5" gutterBottom>
-              Events related to {characterItemData.name}
+              {characterItemData.name} related Events
             </Typography>
             <Divider />
-            {events.map(item => (
-              <Chip
-                key={item.name}
-                label={item.name}
-                className={classes.chip}
-              />
-            ))}
+            <div>
+              {events.map(item => (
+                <Chip
+                  key={item.name}
+                  label={item.name}
+                  className={classes.chip}
+                />
+              ))}
+            </div>
+            <Button className={classes.loadMore} color="secondary">
+              Load More Events
+            </Button>
           </Paper>
         </Grid>
       </Grid>
