@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   //   margin: 5
   // },
   paper: {
-    minHeight: 500, //this should change for screen sizes
+    minHeight: 500, //TODO:this should change for screen sizes
     margin: '5px',
     flexDirection: 'column',
     display: 'flex',

@@ -68,6 +68,7 @@ https://uber.github.io/react-vis/documentation/welcome-to-react-vis
 ### Known Issues
 
 - Fix When no characters return on search - show notification
+- Add Notification/Spinner in required places like -- load more events, search result, initial chars load
 
 ### Features to Implement
 
