@@ -71,5 +71,4 @@ https://uber.github.io/react-vis/documentation/welcome-to-react-vis
 
 ### Features to Implement
 
-- Get more events logic on button click
 - Show all the related characters

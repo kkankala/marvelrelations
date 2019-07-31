@@ -40,23 +40,47 @@ const useStyles = makeStyles(theme => ({
 
 export function CharacterDetails({ match, ...props }) {
   const [events, setEvents] = useState([]);
+  const [availableEventsCount, setAvailableEventsCount] = useState(0);
   const classes = useStyles();
   const [characterItemData, setCharacterItemData] = useState({
     events: { items: [] }
   });
   useEffect(() => {
     const fetchCharItemData = async () => {
-      const result = await fetchGetApi('/characters/' + match.params.charId);
-      //console.log(result.data.results[0].events.items[0].name);
+      const result = await fetchGetApi('characters/' + match.params.charId);
       setCharacterItemData(result.data.results[0]);
-      let availableEventsCount = result.data.results[0].events.available;
-      if (availableEventsCount > result.data.results[0].events.items.length) {
-      }
-      setEvents(result.data.results[0].events.items);
+      setAvailableEventsCount(result.data.results[0].events.available);
+      var modifiedEvents = result.data.results[0].events.items.map(item => {
+        var newItem = {};
+        newItem.title = item.name;
+        newItem.resourceURI = item.resourceURI;
+        return newItem;
+      });
+      setEvents(modifiedEvents);
     };
     fetchCharItemData();
   }, [match.params.charId]);
 
+  async function loadMoreEvents() {
+    if (events.length < availableEventsCount) {
+      let currentLimit =
+        availableEventsCount - events.length > 100
+          ? 100
+          : availableEventsCount - events.length;
+      const eventsResponse = await fetchGetApi(
+        'characters/' +
+          match.params.charId +
+          '/events?offset=' +
+          events.length +
+          '&limit=' +
+          currentLimit
+      );
+      setEvents(previousEvents => [
+        ...previousEvents,
+        ...eventsResponse.data.results
+      ]);
+    }
+  }
   return (
     <div className={classes.root}>
       <Grid
@@ -83,13 +107,18 @@ export function CharacterDetails({ match, ...props }) {
             <div>
               {events.map(item => (
                 <Chip
-                  key={item.name}
-                  label={item.name}
+                  key={item.resourceURI}
+                  label={item.title}
                   className={classes.chip}
                 />
               ))}
             </div>
-            <Button className={classes.loadMore} color="secondary">
+            <Button
+              className={classes.loadMore}
+              color="secondary"
+              onClick={() => loadMoreEvents()}
+              disabled={events.length >= availableEventsCount}
+            >
               Load More Events
             </Button>
           </Paper>
