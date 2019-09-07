@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { Component } from 'react';
 import { fetchGetApi } from '../../api/apiUtils';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { Grid, TextField } from '@material-ui/core/';
 import { Redirect } from 'react-router-dom';
 import CharacterItem from './CharacterItem';
 import SearchIcon from '@material-ui/icons/Search';
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   root: {
     marginTop: '64px'
   },
@@ -24,90 +24,117 @@ const useStyles = makeStyles(theme => ({
   margin: {
     margin: theme.spacing(1)
   }
-}));
+});
 
-function CharactersList(props) {
-  const [redirect, setRedirect] = useState({ isRedirect: false, charId: 0 });
-  const [searchText, setsearchText] = useState('');
-  const classes = useStyles();
-
-  function handleRedirect(charId) {
-    setRedirect({ isRedirect: true, charId });
+class CharactersList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirect: false,
+      charId: null,
+      searchText: '',
+      searchKey: '',
+      results: []
+    };
   }
-  function handleChangeText(event) {
-    setsearchText(event.target.value);
-  }
+  //const [redirect, setRedirect] = useState({ isRedirect: false, charId: 0 });
+  //const [searchText, setSearchText] = useState('');
+  //classes = useStyles();
 
-  const [charactersData, setcharactersData] = useState([]);
+  handleRedirect = charId => {
+    //setRedirect({ isRedirect: true, charId });
+    this.setState({ redirect: true, charId });
+  };
 
-  useEffect(() => {
+  handleChangeText = event => {
+    this.setState({ searchText: event.target.value });
+  };
+
+  //const [charactersData, setCharactersData] = useState([]);
+  //const [searchKey, setSearchKey] = useState('');
+
+  componentDidMount() {
     const fetchData = async () => {
-      const result = await fetchGetApi('characters?limit=100');
-      setcharactersData(result.data.results);
+      const result = await fetchGetApi('characters?limit=50');
+      this.setState({ results: result.data.results });
+      // setCharactersData(result.data.results);
+      // setCachedResults(result.data.results)
     };
     fetchData();
-  }, []);
+  }
 
-  function searchApiByName(value) {
+  searchApiByName = value => {
+    if (!value) return;
+    this.setState({ searchKey: value });
     (async () => {
       const result = await fetchGetApi(
         'characters?nameStartsWith=' + value + '&limit=100'
       );
       //nameStartsWith=loki&
-      setcharactersData(result.data.results);
+      this.setState({ results: result.data.results });
     })();
-  }
+  };
 
-  function handleSearchSubmit(searchValue) {
-    searchApiByName(searchValue);
-  }
-  return redirect.isRedirect ? (
-    <Redirect push to={'/character/' + redirect.charId} />
-  ) : (
-    <div>
-      <div className={classes.margin}>
-        <form
-          onSubmit={event => {
-            event.preventDefault();
-            handleSearchSubmit(searchText);
-          }}
+  handleSearchSubmit = searchValue => {
+    this.searchApiByName(searchValue);
+  };
+  render() {
+    const { classes } = this.props;
+
+    return this.state.redirect.isRedirect ? (
+      <Redirect push to={'/character/' + this.state.redirect.charId} />
+    ) : (
+      <div>
+        <div className={classes.margin}>
+          <form
+            onSubmit={event => {
+              event.preventDefault();
+              this.handleSearchSubmit(this.state.searchText);
+            }}
+          >
+            <Grid container alignItems="flex-end">
+              <Grid item>
+                <SearchIcon />
+              </Grid>
+              <Grid item xs={11}>
+                <TextField
+                  fullWidth
+                  label="Search Character"
+                  onChange={evet => {
+                    this.handleChangeText(evet);
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+        <Grid
+          container
+          className={classes.root}
+          direction="row"
+          justify="center"
+          alignItems="center"
+          alignContent="space-around"
         >
-          <Grid container alignItems="flex-end">
-            <Grid item>
-              <SearchIcon />
-            </Grid>
-            <Grid item xs={11}>
-              <TextField
-                fullWidth
-                label="Search Character"
-                onChange={evet => {
-                  handleChangeText(evet);
-                }}
-              />
-            </Grid>
-          </Grid>
-        </form>
+          {this.state.results.map(item => (
+            <CharacterItem
+              key={item.id}
+              charItem={item}
+              redirectHandler={this.handleRedirect}
+            />
+          ))}
+        </Grid>
       </div>
-      <Grid
-        container
-        className={classes.root}
-        spacing={10}
-        direction="row"
-        justify="center"
-        alignItems="center"
-        alignContent="space-around"
-      >
-        {charactersData.map(item => (
-          <CharacterItem
-            key={item.id}
-            charItem={item}
-            redirectHandler={handleRedirect}
-          />
-        ))}
-      </Grid>
-    </div>
-  );
+    );
+  }
 }
 
+const Loading = () => <div>Loading ...</div>;
+const withLoading = Component => ({ isLoading, ...restProps }) =>
+  isLoading ? <Loading /> : <Component {...restProps} />;
+
 // export default withWidth()(CharactersList);
-export default CharactersList;
+export default withStyles(styles)(CharactersList);
+//export default withLoading(withStyles(styles)(CharactersList));
+
+//export const CharactersListWithLoading = withLoading(CharactersList);
