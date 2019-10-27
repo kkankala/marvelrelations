@@ -6,6 +6,9 @@ import { Redirect } from 'react-router-dom';
 import CharacterItem from './CharacterItem';
 import SearchIcon from '@material-ui/icons/Search';
 
+const DEFAULT_SEARCH_KEY = 'ALL';
+const DEFAULT_PAGE_SIZE = 50;
+
 const styles = theme => ({
   root: {
     marginTop: '64px'
@@ -33,16 +36,25 @@ class CharactersList extends Component {
       redirect: false,
       charId: null,
       searchText: '',
-      searchKey: '',
-      results: []
+      searchKey: 'ALL',
+      results: [],
+      isLoading: true
     };
   }
-  //const [redirect, setRedirect] = useState({ isRedirect: false, charId: 0 });
-  //const [searchText, setSearchText] = useState('');
-  //classes = useStyles();
+
+  setCharactersData(searchResults = []) {
+    const { searchKey, results } = this.state;
+    const oldResults = results && results[searchKey] ? results[searchKey] : [];
+    const updatedResults = [...oldResults, ...searchResults];
+    this.setState({
+      results: {
+        ...results,
+        [searchKey]: { updatedResults }
+      }
+    });
+  }
 
   handleRedirect = charId => {
-    //setRedirect({ isRedirect: true, charId });
     this.setState({ redirect: true, charId });
   };
 
@@ -50,39 +62,47 @@ class CharactersList extends Component {
     this.setState({ searchText: event.target.value });
   };
 
-  //const [charactersData, setCharactersData] = useState([]);
-  //const [searchKey, setSearchKey] = useState('');
-
   componentDidMount() {
-    const fetchData = async () => {
-      const result = await fetchGetApi('characters?limit=50');
-      this.setState({ results: result.data.results });
-      // setCharactersData(result.data.results);
-      // setCachedResults(result.data.results)
-    };
-    fetchData();
+    this.fetchData();
   }
+  fetchData = async () => {
+    const result = await fetchGetApi(`characters?limit=${DEFAULT_PAGE_SIZE}`);
+    this.setState({ searchKey: DEFAULT_SEARCH_KEY });
+    this.setCharactersData(result.data.results);
+    this.setState({ isLoading: false });
+  };
 
   searchApiByName = value => {
-    if (!value) return;
-    this.setState({ searchKey: value });
-    (async () => {
-      const result = await fetchGetApi(
-        'characters?nameStartsWith=' + value + '&limit=100'
-      );
-      //nameStartsWith=loki&
-      this.setState({ results: result.data.results });
-    })();
+    if (!value) {
+      this.setState({ searchKey: DEFAULT_SEARCH_KEY });
+    } else {
+      this.setState({ searchKey: value });
+      (async () => {
+        const result = await fetchGetApi(
+          `characters?nameStartsWith=${value}&limit=${DEFAULT_PAGE_SIZE}`
+        );
+        this.setCharactersData(result.data.results);
+      })();
+    }
   };
 
   handleSearchSubmit = searchValue => {
     this.searchApiByName(searchValue);
   };
+
   render() {
     const { classes } = this.props;
+    const { results, searchKey } = this.state;
 
-    return this.state.redirect.isRedirect ? (
-      <Redirect push to={'/character/' + this.state.redirect.charId} />
+    const page =
+      (results && results[searchKey] && results[searchKey].page) || 0;
+
+    const list =
+      (results && results[searchKey] && results[searchKey].updatedResults) ||
+      [];
+
+    return this.state.redirect ? (
+      <Redirect push to={'/character/' + this.state.charId} />
     ) : (
       <div>
         <div className={classes.margin}>
@@ -116,7 +136,7 @@ class CharactersList extends Component {
           alignItems="center"
           alignContent="space-around"
         >
-          {this.state.results.map(item => (
+          {list.map(item => (
             <CharacterItem
               key={item.id}
               charItem={item}
@@ -130,11 +150,13 @@ class CharactersList extends Component {
 }
 
 const Loading = () => <div>Loading ...</div>;
-const withLoading = Component => ({ isLoading, ...restProps }) =>
-  isLoading ? <Loading /> : <Component {...restProps} />;
+const withLoading = Component => ({ isLoading, ...restProps }) => {
+  debugger;
+  return isLoading ? <Loading /> : <Component {...restProps} />;
+};
 
 // export default withWidth()(CharactersList);
-export default withStyles(styles)(CharactersList);
-//export default withLoading(withStyles(styles)(CharactersList));
+//export default withStyles(styles)(CharactersList);
+export default withStyles(styles)(withLoading(CharactersList));
 
 //export const CharactersListWithLoading = withLoading(CharactersList);
